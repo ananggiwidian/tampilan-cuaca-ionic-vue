@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cuaca Jakarta - Tabel Sederhana</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 20px 16px 30px;
+        }
+        h1 {
+            font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .sub {
+            color: #475569;
+            border-left: 4px solid #3b82f6;
+            padding-left: 12px;
+            margin: 8px 0 20px 0;
+            font-size: 0.9rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        th {
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 8px;
+            font-weight: 600;
+            text-align: left;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        .loading, .error {
+            text-align: center;
+            padding: 40px;
+            font-size: 1rem;
+            background: #f9f9fb;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+        .badge {
+            background: #e2e8f0;
+            border-radius: 40px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 24px;
+        }
+        button {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 560px) {
+            body { padding: 12px; }
+            .container { padding: 16px; }
+            th, td { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <h1>Cuaca Jakarta</h1>
+        <div class="sub">Data real-time dari Open-Meteo | Suhu dalam °C</div>
+
+        <div v-if="loading" class="loading">
+            Memuat data cuaca...
+        </div>
+        <div v-else-if="error" class="error">
+            {{ error }}<br>
+            <button @click="fetchWeather">Coba lagi</button>
+        </div>
+        <div v-else>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Waktu (WIB)</th>
+                        <th>Suhu (°C)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in weatherList" :key="index">
+                        <td>{{ formatDateTime(item.time) }}</td>
+                        <td><strong>{{ item.temp }} °C</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 12px; font-size:0.7rem; text-align:right; color:#64748b;">
+                Total {{ weatherList.length }} jam prakiraan
+            </div>
+        </div>
+        <footer>
+            Sumber: api.open-meteo.com | Jakarta, Indonesia
+        </footer>
+    </div>
+</div>
+
+<script>
+const { createApp, ref, onMounted } = Vue;
+
+createApp({
+    setup() {
+        const weatherList = ref([]);
+        const loading = ref(true);
+        const error = ref(null);
+
+        const fetchWeather = async () => {
+            loading.value = true;
+            error.value = null;
+            const url = 'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m&timezone=Asia/Jakarta';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                const times = data.hourly.time;
+                const temps = data.hourly.temperature_2m;
+                weatherList.value = times.map((time, idx) => ({
+                    time: time,
+                    temp: temps[idx]
+                }));
+            } catch (err) {
+                error.value = 'Gagal mengambil data. Periksa koneksi internet.';
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        const formatDateTime = (isoString) => {
+            if (!isoString) return '';
+            const date = new Date(isoString);
+            return date.toLocaleString('id-ID', {
+                day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+            });
+        };
+
+        onMounted(() => {
+            fetchWeather();
+        });
+
+        return {
+            weatherList,
+            loading,
+            error,
+            formatDateTime,
+            fetchWeather
+        };
+    }
+}).mount('#app');
+</script>
+</body>
+</html>
