@@ -1,0 +1,150 @@
+/* HomePage Modern Styles */
+.main-content {
+  --background: #f5f7fa;
+}
+
+.header-toolbar {
+  --background: linear-gradient(135deg, #2c3e50, #3498db);
+  --color: white;
+  --border-style: none;
+  text-align: center;
+}
+
+.nav-button {
+  margin-right: 12px;
+  --color: white;
+}
+
+.current-weather {
+  margin: 20px 16px;
+  border-radius: 28px;
+  padding: 24px 16px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.temp-icon ion-icon {
+  font-size: 48px;
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+}
+
+.temp-value {
+  font-size: 64px;
+  font-weight: bold;
+  margin: 8px 0;
+  letter-spacing: -2px;
+}
+
+.temp-desc {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.temp-time {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 16px 24px 16px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  padding: 12px;
+  flex: 1;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.stat-card ion-icon {
+  font-size: 24px;
+  color: #3498db;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.hourly-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 16px 8px 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.hourly-title ion-icon {
+  font-size: 20px;
+}
+
+.hourly-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 8px 16px 20px 16px;
+  scrollbar-width: thin;
+}
+
+.hourly-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.hour-card {
+  background: white;
+  border-radius: 20px;
+  padding: 12px 16px;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.hour-card:hover {
+  transform: translateY(-2px);
+}
+
+.hour-time {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.hour-card ion-icon {
+  font-size: 28px;
+  margin: 8px 0;
+  color: #f39c12;
+}
+
+.hour-temp {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.loading-skeleton {
+  margin-top: 40px;
+}
+
+.error-card {
+  text-align: center;
+  margin-top: 40%;
+  padding: 20px;
+}
